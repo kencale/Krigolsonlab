@@ -1,0 +1,49 @@
+<mat-toolbar color="primary">
+  <img src="assets/brain.svg" alt="Brain icon" class="app-icon" />
+  Muse EEG Explorer
+  <span class="header-fill"></span>
+  <span [hidden]="!(batteryLevel|async)" class="battery-level-indicator">
+    <mat-icon>battery_std</mat-icon>{{batteryLevel|async|number:"1.0-0"}}%
+  </span>
+  <mat-icon *ngIf="connected" (click)="disconnect()" title="Disconnect">bluetooth_connected</mat-icon>
+</mat-toolbar>
+<section>
+  <mat-card *ngIf="!connected">
+    <button *ngIf="!connecting" mat-raised-button color="primary" (click)="connect()">
+      <mat-icon>bluetooth</mat-icon>
+      Connect
+    </button>
+    <div *ngIf="!connecting" class="connection-options">
+      <mat-checkbox [(ngModel)]="enableAux">
+        Enable Auxilary Electrode
+      </mat-checkbox>
+    </div>
+    <div *ngIf="connecting">
+      Connecting...
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
+  </mat-card>
+  <mat-card *ngIf="data">
+    <mat-card-title>Live EEG Plot</mat-card-title>
+    <mat-card-content>
+      <app-time-series [data]="data" [enableAux]="enableAux"></app-time-series>
+    </mat-card-content>
+  </mat-card>
+  <mat-card *ngIf="connected">
+    <mat-card-title>Head Position</mat-card-title>
+    <mat-card-content>
+      <app-head-view [xyz]="accelerometer"></app-head-view>
+    </mat-card-content>
+  </mat-card>
+  <mat-card *ngIf="data">
+    <mat-card-title>Recording</mat-card-title>
+    <mat-card-content>
+      <app-recorder [data]="data"></app-recorder>
+    </mat-card-content>
+  </mat-card>
+  <mat-card *ngIf="connected">
+    <app-headset-info [controlResponses]="controlResponses"></app-headset-info>
+  </mat-card>
+   <input type="text" [(ngModel)]="time">
+   <p>{{ time }} seconds of data will be transformed</p>
+</section>
