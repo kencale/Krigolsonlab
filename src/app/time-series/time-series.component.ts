@@ -87,6 +87,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewInit {
     )
       .subscribe(sample => {
         this.draw(sample.timestamp, sample.value, sample.electrode);
+        console.log(sample); // subscribe to the time-series component to display the data
       });
   }
 
