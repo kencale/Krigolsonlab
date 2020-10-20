@@ -82,11 +82,13 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewInit {
         return group.pipe(
           filter(sample => !isNaN(sample.value)),
           map(sample => ({ ...sample, value: conditionalFilter(sample.value) })),
+
         );
       })
     )
       .subscribe(sample => {
         this.draw(sample.timestamp, sample.value, sample.electrode);
+        console.log(sample.value);
       });
   }
 
