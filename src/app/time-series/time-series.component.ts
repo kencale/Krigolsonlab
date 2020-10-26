@@ -8,6 +8,16 @@ import { bandpass } from './../shared/bandpass.filter';
 
 import { ChartService } from '../shared/chart.service';
 
+import 'fft-js';
+// import {
+//   bandpassFilter,
+//   epoch,
+//   fft,
+//   sliceFFT
+// } from "@neurosity/pipes";
+
+import { fromEvent } from "rxjs";
+
 const samplingFrequency = 256;
 
 @Component({
@@ -88,7 +98,43 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewInit {
     )
       .subscribe(sample => {
         this.draw(sample.timestamp, sample.value, sample.electrode);
-        console.log(sample.value);
+        if (sample.electrode==0){
+          console.log(sample, "Value_0="+sample.value);
+          var signal= [1,0,1,0];
+
+      }
+
+      console.log("signal="+signal);
+
+// export function getSettings() {
+//   return {
+//     cutOffLow: 1,
+//     cutOffHigh: 100,
+//     interval: 100,
+//     bins: 256,
+//     sliceFFTLow: 1,
+//     sliceFFTHigh: 100,
+//     duration: 1024,
+//     srate: 256,
+//     name: 'Spectra',
+//     secondsToSave: 10
+
+//   }
+// };
+
+
+
+
+        // var fft = require('fft-js').fft, fftUtil = require('fft-js').util, signal = [sample.value];
+        // var phasors= fft(signal);
+        // var frequencies = fftUtil.fftFreq(phasors, 8000), // Sample rate and coef is just used for length, and frequency step
+        //       magnitudes = fftUtil.fftMag(phasors); 
+        // var both = frequencies.map(function (f, ix) {
+        //       return {frequency: f, magnitude: magnitudes[ix]};
+        // });
+        // console.log(both);
+
+
       });
   }
 
