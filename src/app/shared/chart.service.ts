@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+
 @Injectable()
 export class ChartService {
 
@@ -35,4 +36,51 @@ export class ChartService {
       { borderColor: 'rgba(77,83,96,1)', backgroundColor: 'rgba(77,83,96,1)' }
     ];
   }
+
+  // Function to count by n to something
+  customCount(start: number, end: number, step = 1) {
+    const len = Math.floor((end - start) / step) + 1;
+    return Array(len).fill(0).map((_, idx) => start + idx * step);
+  }
+
+// Average of values in data
+  average(data: Array<number>) {
+    const sum = data.reduce((sumTemp: number, value: number) => sumTemp + value, 0);
+    return sum / data.length;
+}
+
+
+
+/*   // Generate xTics
+  generateXTics(srate, duration, reverse = true) {
+  let tics = [];
+  if (reverse) {
+    tics = customCount(
+      (1000 / srate) * duration,
+      1000 / srate,
+      -(1000 / srate)
+    )
+  } else {
+    tics = customCount(
+      1000 / srate,
+      (1000 / srate) * duration,
+      1000/srate
+    )
+  }
+  return (
+    tics.map(function(each_element) {
+      return Number(each_element.toFixed(0));
+    })
+  )
+} */
+
+// Standard deviation of values in values
+  standardDeviation(values: Array<number>){
+       const avg = this.average(values);
+       const squareDiffs = values.map((value: number) => Math.pow((value - avg), 2));
+       const avgSquareDiff = this.average(squareDiffs);
+       const stdDev = Math.sqrt(avgSquareDiff).toFixed(0);
+       return stdDev;
+}
+
 }

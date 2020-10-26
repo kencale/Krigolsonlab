@@ -92,9 +92,10 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    const delay = 0;
     const channels = this.view.nativeElement.querySelectorAll('canvas');
     this.canvases.forEach((canvas, index) => {
-      canvas.streamTo(channels[index]);
+      canvas.streamTo(channels[index], delay);
     });
   }
 
