@@ -1,1 +1,1 @@
-import { FrequencyBandsComponent } from './frequency-bands.component';
+export { FrequencyBandsComponent } from './frequency-bands.component';

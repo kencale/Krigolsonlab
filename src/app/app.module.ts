@@ -1,3 +1,4 @@
+import { FrequencySpectraComponent } from './frequency-spectra/frequency-spectra.component';
 import { FrequencyBandsComponent } from './frequency-bands/frequency-bands.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -24,7 +25,8 @@ import { RecorderComponent } from './recorder/recorder.component';
     HeadViewComponent,
     HeadsetInfoComponent,
     RecorderComponent,
-    FrequencyBandsComponent
+    FrequencyBandsComponent,
+    FrequencySpectraComponent
   ],
   imports: [
     BrowserModule,

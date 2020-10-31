@@ -11,14 +11,14 @@ import {Chart} from 'chart.js';
 
 
 import { ChartService } from '../shared/chart.service';
-import {options, dataSets, bandLabels } from '../shared/chartOptions';
+import {options,  bandLabels, backgroundColors, borderColors, spectraDataSet } from '../shared/chartOptions';
 import {
   bandpassFilter,
   epoch,
   fft,
   powerByBand
 } from '@neurosity/pipes';
-import { debugOutputAstAsTypeScript } from '@angular/compiler';
+
 // If you have inner observable use mergemap to allow you to  subscribe to directly to it after applying map operation
 
 const chartStyles = {
@@ -67,54 +67,31 @@ export class FrequencyBandsComponent implements OnInit, OnDestroy, AfterViewInit
   @Input() data: Observable<EEGSample>;
   @Input() enableAux: boolean;
 
-  filter = false;
-
   settings: ISettings;
   canvases: SmoothieChart[];
 
   readonly destroy = new Subject<void>();
   readonly channelNames = channelNames;
-  readonly amplitudes = [];
-  readonly uVrms = [0, 0, 0, 0, 0];
-  readonly uMeans = [0, 0, 0, 0, 0];
-
-  readonly options = this.chartService.getChartSmoothieDefaults({
-    millisPerPixel: 8,
-    maxValue: 500,
-    minValue: -500
-  });
-  readonly colors = this.chartService.getColors();
 
   private lines: TimeSeries[];
   chart: any;
 
-  constructor(private view: ElementRef, private chartService: ChartService) {
-  }
-
-  get amplitudeScale() {
-    return this.canvases[0].options.maxValue;
-  }
-
-  set amplitudeScale(value: number) {
-    for (const canvas of this.canvases) {
-      canvas.options.maxValue = value;
-      canvas.options.minValue = -value;
-    }
-  }
-
-  get timeScale() {
-    return this.canvases[0].options.millisPerPixel;
-  }
-
-  set timeScale(value: number) {
-    for (const canvas of this.canvases) {
-      canvas.options.millisPerPixel = value;
-    }
-  }
+  constructor(private view: ElementRef) {}
 
   ngOnInit() {
     const canvas = <HTMLCanvasElement> document.getElementById('freqChart');
-    const ctx = canvas.getContext('2d');
+    const dataSets = [];
+    this.settings = getSettings();
+    this.settings.nChannels = this.enableAux ? 5 : 4;
+
+    Array(this.settings.nChannels).fill(0).map((ch, i) => {
+          const temp =  Object.assign({}, spectraDataSet);
+          temp.backgroundColor = backgroundColors[i];
+          temp.borderColor = borderColors[i];
+          temp.label = 'Channel ' + i;
+          temp.data = Array(this.settings.nChannels).fill(0);
+          dataSets.push(temp);
+        });
     this.chart = new Chart(canvas, {
       type: 'bar',
       data: {
@@ -131,8 +108,7 @@ export class FrequencyBandsComponent implements OnInit, OnDestroy, AfterViewInit
         }
     }
     });
-    this.settings = getSettings();
-    this.settings.nChannels = this.enableAux ? 5 : 4;
+
 
     this.data.pipe(
       takeUntil(this.destroy),
@@ -153,22 +129,22 @@ export class FrequencyBandsComponent implements OnInit, OnDestroy, AfterViewInit
       });
   }
 
-  ngAfterViewInit() {
-    //const channels = this.view.nativeElement.querySelectorAll('canvas');
-  }
+  ngAfterViewInit() { }
 
   ngOnDestroy() {
     this.destroy.next();
   }
 
   addData(data){
-   // console.log('I am data', data);
-    //console.log('I am a chart', this.chart.data);
-    this.chart.data.datasets[0].data.push(data.alpha);
-    this.chart.data.datasets[1].data.push(data.beta);
-    this.chart.data.datasets[2].data.push(data.delta);
-    this.chart.data.datasets[3].data.push(data.gamma);
-    this.chart.data.datasets[4].data.push(data.theta);
+    for (let i = 0; i < this.settings.nChannels; i++) {
+      this.chart.data.datasets[i].data.pop();
+      this.chart.data.datasets[0].data.push(data.alpha[i]);
+      this.chart.data.datasets[1].data.push(data.beta[i]);
+      this.chart.data.datasets[2].data.push(data.delta[i]);
+      this.chart.data.datasets[3].data.push(data.gamma[i]);
+      this.chart.data.datasets[4].data.push(data.theta[i]);
+
+    }
     this.chart.update();
   }
 }

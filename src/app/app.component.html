@@ -23,19 +23,25 @@
       <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     </div>
   </mat-card>
-  <mat-card *ngIf="data">
+  <!-- <mat-card *ngIf="data">
     <mat-card-title>Live EEG Plot</mat-card-title>
     <mat-card-content>
       <app-time-series [data]="data" [enableAux]="enableAux"></app-time-series>
     </mat-card-content>
-  </mat-card>
+  </mat-card> -->
   <mat-card *ngIf="data">
     <mat-card-title>Frequency Components</mat-card-title>
     <mat-card-content>
       <app-frequency-bands [data]="data" [enableAux]="enableAux"></app-frequency-bands>
     </mat-card-content>
   </mat-card>
-  <mat-card *ngIf="connected">
+  <mat-card *ngIf="data">
+    <mat-card-title>Frequency Spectrum</mat-card-title>
+    <mat-card-content>
+      <app-frequency-spectra [data]="data" [enableAux]="enableAux"></app-frequency-spectra>
+    </mat-card-content>
+  </mat-card>
+  <!-- <mat-card *ngIf="connected">
     <mat-card-title>Head Position</mat-card-title>
     <mat-card-content>
       <app-head-view [xyz]="accelerometer"></app-head-view>
@@ -46,7 +52,7 @@
     <mat-card-content>
       <app-recorder [data]="data"></app-recorder>
     </mat-card-content>
-  </mat-card>
+  </mat-card> -->
   <mat-card *ngIf="connected">
     <app-headset-info [controlResponses]="controlResponses"></app-headset-info>
   </mat-card>
