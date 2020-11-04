@@ -84,7 +84,7 @@ export class FrequencyBandsComponent implements OnInit, OnDestroy, AfterViewInit
     this.settings = getSettings();
     this.settings.nChannels = this.enableAux ? 5 : 4;
 
-    Array(this.settings.nChannels).fill(0).map((ch, i) => {
+    Array(5).fill(0).map((ch, i) => {
           const temp =  Object.assign({}, spectraDataSet);
           temp.backgroundColor = backgroundColors[i];
           temp.borderColor = borderColors[i];
@@ -137,7 +137,14 @@ export class FrequencyBandsComponent implements OnInit, OnDestroy, AfterViewInit
 
   addData(data){
     for (let i = 0; i < this.settings.nChannels; i++) {
-      this.chart.data.datasets[i].data.pop();
+      this.chart.data.datasets[0].data.pop();
+      this.chart.data.datasets[1].data.pop();
+      this.chart.data.datasets[2].data.pop();
+      this.chart.data.datasets[3].data.pop();
+      this.chart.data.datasets[4].data.pop();
+    }
+
+    for (let i = 0; i < this.settings.nChannels; i++) {
       this.chart.data.datasets[0].data.push(data.alpha[i]);
       this.chart.data.datasets[1].data.push(data.beta[i]);
       this.chart.data.datasets[2].data.push(data.delta[i]);

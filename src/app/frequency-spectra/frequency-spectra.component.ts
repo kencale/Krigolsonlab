@@ -105,21 +105,40 @@ export class FrequencySpectraComponent implements OnInit, OnDestroy, AfterViewIn
             labels: [],
         },
         options: {
+          events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
+          tooltips:{
+            enabled: true,
+            intersect: true,
+            mode: 'point',
+            callbacks: {
+              label: function(tooltipItem: any, data) {
+                  let label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                  if (label) {
+                      label += ': ';
+                  }
+                  label += Math.round(tooltipItem.yLabel * 100) / 100;
+                  return label;
+              }
+            }
+          },
+          hover: {
+            animationDuration: 0
+          },
+          responsiveAnimationDuration: 0,
           title:{
             display: true,
             text: 'Frequency Spectra per Electrode'
           },
           scales: {
             yAxes: [{
-                stacked: false,
-            }, {
               scaleLabel: {
               display: true,
               labelString: 'Power (uV)'
             }}],
-            xAxes:[{
-              scaleLabel:{
-                display: false,
+            xAxes: [{
+              scaleLabel: {
+                display: true,
                 labelString: 'Frequency (Hz)'
               }
             }]
