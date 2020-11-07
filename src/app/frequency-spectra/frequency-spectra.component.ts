@@ -85,8 +85,7 @@ export class FrequencySpectraComponent implements OnInit, OnDestroy, AfterViewIn
   ngOnInit() {
     this.settings = getSettings();
     this.settings.nChannels = this.enableAux ? 5 : 4;
-    //const canvas = Array(this.settings.nChannels).fill(0).map((ch, i) =>
-    //              <HTMLCanvasElement> document.getElementById('freqSpectra' + (i)));
+
     const canvas = <HTMLCanvasElement> document.getElementById('freqSpectra');
     const dataSets = [];
     const spectraLabels = ['TP9', 'AF7', 'AF8', 'TP10', 'AUX'];

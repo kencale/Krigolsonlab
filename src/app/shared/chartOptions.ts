@@ -78,7 +78,7 @@ export const generalOptions = {
 };
 
 export const bandLabels = ['Alpha', 'Beta', 'Delta', 'Gamma', 'Theta'];
-
+export const channelLabels = ['TP9', 'AF7', 'AF8', 'TP10', 'Aux'];
 
 
 export const options: {

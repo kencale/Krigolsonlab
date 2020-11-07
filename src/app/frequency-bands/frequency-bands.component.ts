@@ -11,7 +11,7 @@ import {Chart} from 'chart.js';
 
 
 import { ChartService } from '../shared/chart.service';
-import {options,  bandLabels, backgroundColors, borderColors, spectraDataSet } from '../shared/chartOptions';
+import {channelLabels,  bandLabels, backgroundColors, borderColors, spectraDataSet } from '../shared/chartOptions';
 import {
   bandpassFilter,
   epoch,
@@ -84,12 +84,12 @@ export class FrequencyBandsComponent implements OnInit, OnDestroy, AfterViewInit
     this.settings = getSettings();
     this.settings.nChannels = this.enableAux ? 5 : 4;
 
-    Array(5).fill(0).map((ch, i) => {
+    Array(this.settings.nChannels).fill(0).map((ch, i) => {
           const temp =  Object.assign({}, spectraDataSet);
           temp.backgroundColor = backgroundColors[i];
           temp.borderColor = borderColors[i];
-          temp.label = 'Channel ' + i;
-          temp.data = Array(this.settings.nChannels).fill(0);
+         // temp.label = channelLabels[i];
+          temp.data = Array(5).fill(0);
           dataSets.push(temp);
         });
     this.chart = new Chart(canvas, {
@@ -99,14 +99,25 @@ export class FrequencyBandsComponent implements OnInit, OnDestroy, AfterViewInit
         labels: bandLabels
     },
       options: {
+        title:{
+          display: true,
+          text: 'Frequency Bands per Electrode'
+        },
+        responsiveAnimationDuration: 0,
         scales: {
+            yAxes: [{
+              scaleLabel: {
+              display: true,
+              labelString: 'Power (uV)'
+            }}],
             xAxes: [{
-                gridLines: {
-                    offsetGridLines: true
-                }
+              scaleLabel: {
+                display: true,
+                labelString: 'Frequency Bands'
+              }
             }]
         }
-    }
+      }
     });
 
 
@@ -129,27 +140,34 @@ export class FrequencyBandsComponent implements OnInit, OnDestroy, AfterViewInit
       });
   }
 
-  ngAfterViewInit() { }
+  ngAfterViewInit() {
+    if (this.data){
+      this.chart.options.scales.yAxes[0] = {
+        display: true
+      };
+      this.chart.update();
+    }
+  }
 
   ngOnDestroy() {
     this.destroy.next();
   }
 
-  addData(data){
+  addData(data: any){
     for (let i = 0; i < this.settings.nChannels; i++) {
-      this.chart.data.datasets[0].data.pop();
-      this.chart.data.datasets[1].data.pop();
-      this.chart.data.datasets[2].data.pop();
-      this.chart.data.datasets[3].data.pop();
-      this.chart.data.datasets[4].data.pop();
+       for (let k = 0; k < 5; k++) {
+         this.chart.data.datasets[i].data.pop();
+       }
     }
 
     for (let i = 0; i < this.settings.nChannels; i++) {
-      this.chart.data.datasets[0].data.push(data.alpha[i]);
-      this.chart.data.datasets[1].data.push(data.beta[i]);
-      this.chart.data.datasets[2].data.push(data.delta[i]);
-      this.chart.data.datasets[3].data.push(data.gamma[i]);
-      this.chart.data.datasets[4].data.push(data.theta[i]);
+      // Each dataset represents an electrode (channel)
+      // Each point represents a different frequency range
+        this.chart.data.datasets[i].data.push(data.alpha[i]);
+        this.chart.data.datasets[i].data.push(data.beta[i]);
+        this.chart.data.datasets[i].data.push(data.delta[i]);
+        this.chart.data.datasets[i].data.push(data.gamma[i]);
+        this.chart.data.datasets[i].data.push(data.theta[i]);
 
     }
     this.chart.update();
